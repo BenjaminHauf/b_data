@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'filesys',
     'accounts',
+    'correspondence',
+    'reports',
 ]
 
 MIDDLEWARE = [
