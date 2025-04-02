@@ -26,11 +26,14 @@ class Account(models.Model):
 
 class Family(models.Model):
 
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+
     first_name = models.CharField(max_length=30, null=False, blank=False)
     last_name = models.CharField(max_length=30, null=False, blank=False)
     address = models.CharField(max_length=30, null=True, blank=True)
-    phone = models.CharField(max_length=30, null=True, blank=True)
-    email = models.CharField(max_length=30, null=True, blank=True)
+    phone = models.IntegerField(null=True, blank=True)
+    email = models.EmailField(max_length=30, null=True, blank=True)
+    main_contact = models.BooleanField(default=False)
 
 
 class Accommodation(models.Model):
