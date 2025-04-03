@@ -6,22 +6,27 @@ class Account(models.Model):
     
     first_name = models.CharField(max_length=30, null=False, blank=False)
     last_name = models.CharField(max_length=30, null=False, blank=False)
-    birthdate = models.CharField(max_length=10, null=False, blank=False)
-    slug = models.SlugField(unique=True, blank=True)
+    birthdate = models.DateField(null=False, blank=False)
+    slug = models.SlugField(unique=True, blank=True, default="")
 
-    birthplace = models.DateField(max_length=30, null=True, blank=True)
+    birthplace = models.CharField(max_length=30, null=True, blank=True)
     image = models.CharField(null=True,blank=True)
-    phone_number = models.CharField(max_length=30, null=True, blank=True)
+    phone_number = models.BigIntegerField(null=True, blank=True)
     address = models.CharField(max_length=30, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if not self.slug:
-            base_slug = slugify(f"{self.first_name}-{self.last_name}-{self.birthdate}")
-            self.slug = base_slug
+        if self.pk is not None:
+            old_account = Account.objects.get(pk=self.pk)
+            if (old_account.first_name != self.first_name or
+                old_account.last_name != self.last_name or
+                old_account.birthdate != self.birthdate):
+                self.slug = slugify(f"{self.first_name}-{self.last_name}-{self.birthdate.strftime('%Y%m%d')}")
+        else:
+            self.slug = slugify(f"{self.first_name}-{self.last_name}-{self.birthdate.strftime('%Y%m%d')}")
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.slug
+        return f"{self.first_name} {self.last_name}"
 
 
 class Family(models.Model):
@@ -31,9 +36,16 @@ class Family(models.Model):
     first_name = models.CharField(max_length=30, null=False, blank=False)
     last_name = models.CharField(max_length=30, null=False, blank=False)
     address = models.CharField(max_length=30, null=True, blank=True)
-    phone = models.IntegerField(null=True, blank=True)
+    
+    phone = models.BigIntegerField(null=True, blank=True)
     email = models.EmailField(max_length=30, null=True, blank=True)
     main_contact = models.BooleanField(default=False)
+
+    def __str__(self):
+        if self.main_contact:
+            return f" {self.account} -- {self.first_name} {self.last_name} - Main"
+        else:
+            return f" {self.account} -- {self.first_name} {self.last_name}"
 
 
 class Accommodation(models.Model):
