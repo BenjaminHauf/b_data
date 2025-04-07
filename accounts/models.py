@@ -4,7 +4,7 @@ from django.utils.text import slugify
 # Create your models here.
 class Address(models.Model):
 
-    street = models.CharField(max_length=30, null=True, blank=True)
+    street = models.CharField(max_length=40, null=True, blank=True)
     house_number = models.IntegerField(null=True, blank=True)
     addition = models.CharField(null=True, blank=True)
     zip_code = models.IntegerField(null=True, blank=True)
@@ -36,6 +36,7 @@ class Account(models.Model):
     birthplace = models.CharField(max_length=30, null=True, blank=True)
     image = models.CharField(null=True,blank=True)
     phone_number = models.BigIntegerField(null=True, blank=True)
+    email = models.CharField(max_length=30, null=True, blank=True)
     address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
@@ -60,11 +61,12 @@ class Family(models.Model):
     contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
     main_contact = models.BooleanField(default=False)
 
-    def __str__(self):
+"""    def __str__(self):
         if self.main_contact:
-            return f" {self.account} -- {self.first_name} {self.last_name} - Main"
+            return f" {self.account} -- {self.address.street} {self.address.house_number} - Main"
         else:
-            return f" {self.account} -- {self.first_name} {self.last_name}"
+            return f" {self.account} -- {self.address.street} {self.address.house_number}"
+"""
 
 
 class Accommodation(models.Model):
