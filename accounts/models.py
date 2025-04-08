@@ -7,6 +7,7 @@ class Address(models.Model):
     street = models.CharField(max_length=40, null=True, blank=True)
     house_number = models.IntegerField(null=True, blank=True)
     addition = models.CharField(null=True, blank=True)
+    room = models.CharField(null=True, blank=True)
     zip_code = models.IntegerField(null=True, blank=True)
     city = models.CharField(max_length=30, null=True, blank=True)
     state = models.CharField(max_length=30, null=True, blank=True)
