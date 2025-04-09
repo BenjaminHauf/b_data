@@ -1,5 +1,5 @@
 from django import forms
-from .models import Address, Contact, Family
+from .models import Address, Contact
 
 class AddressFormMixin(forms.ModelForm):
     street = forms.CharField(max_length=40)

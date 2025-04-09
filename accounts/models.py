@@ -21,7 +21,7 @@ class Contact(models.Model):
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=30, null=True, blank=True)
     contact_email = models.CharField(max_length=30, null=True, blank=True)
-    contact_phone = models.IntegerField(null=True, blank=True)
+    contact_phone = models.BigIntegerField(null=True, blank=True)
     
     def __str__(self):
         return f"{self.first_name}{self.last_name} {self.contact_email} {self.contact_phone}"
@@ -62,42 +62,65 @@ class Family(models.Model):
     contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
     main_contact = models.BooleanField(default=False)
 
-"""    def __str__(self):
+    def __str__(self):
         if self.main_contact:
-            return f" {self.account} -- {self.address.street} {self.address.house_number} - Main"
+            return f" {self.contact.first_name} {self.contact.last_name} - {self.account} - Main"
         else:
-            return f" {self.account} -- {self.address.street} {self.address.house_number}"
-"""
+            return f" {self.contact.first_name} {self.contact.last_name} - {self.account}"
+
 
 
 class Accommodation(models.Model):
-
-    name = models.CharField(max_length=30, null=True, blank=True)
+    account = models.ForeignKey(Account, default=1, on_delete=models.CASCADE)
+    name = models.CharField(max_length=40, null=True, blank=True)
+    cost = models.CharField(max_length=30, null=True, blank=True)
+    sepa = models.BooleanField(default=False)
+    iban = models.BigIntegerField(null=True, blank=True)
+    bic = models.BigIntegerField(null=True, blank=True)
+    start_date = models.DateField()
     address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
     contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
-    cost = models.CharField(max_length=30, null=True, blank=True)
-    start_date = models.DateField()
+    
 
 class Bank(models.Model):
+    account = models.ForeignKey(Account, default=1, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=30, null=True, blank=True)
-    contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
-    address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
     account_number = models.CharField(max_length=30, null=True, blank=True)
-    iban = models.CharField(max_length=30, null=True, blank=True)
+    iban = models.BigIntegerField(null=True, blank=True)
+    bic = models.BigIntegerField(null=True, blank=True)
     start_date = models.DateField()
-
-class Insurance(models.Model):
-    company_name = models.CharField(max_length=30, null=True, blank=True)
-    address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
     contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
+    address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
+
+class InsuranceCategory(models.Model):
+    name = models.CharField(max_length=40, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.name}"
+    
+class Insurance(models.Model):
+    account = models.ForeignKey(Account, default=1, on_delete=models.CASCADE)
+    category = models.ForeignKey(InsuranceCategory, on_delete=models.SET_NULL, null=True, blank=True)
+    company_name = models.CharField(max_length=30, null=True, blank=True)
+    policy_number = models.CharField(max_length=30, null=True, blank=True)
     product = models.CharField(max_length=30, null=True, blank=True)
     cost = models.CharField(max_length=30, null=True, blank=True)
-    start_date = models.DateField()
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField( null=True, blank=True)
+    sepa = models.BooleanField(default=False)
+    iban = models.BigIntegerField(null=True, blank=True)
+    bic = models.BigIntegerField(null=True, blank=True)
+    reference = models.CharField(max_length=30, null=True, blank=True)
+    address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
+    contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
+    
 
 class Administration(models.Model):
+    account = models.ForeignKey(Account, default=1, on_delete=models.CASCADE)
     organisation = models.CharField(max_length=30, null=True, blank=True)
     address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.SET_NULL)
     contact = models.ForeignKey(Contact, null=True, blank=True, on_delete=models.SET_NULL)
     iban = models.CharField(max_length=30, null=True, blank=True)
+    bic = models.BigIntegerField(null=True, blank=True)
     start_date = models.DateField()
-    reference_number = models.CharField(max_length=30, null=False, blank=False)
+    reference = models.CharField(max_length=30, null=False, blank=False)

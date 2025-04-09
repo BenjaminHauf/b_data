@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
-from .models import Account, Family
+from .models import Account, Family, Accommodation, Bank, Insurance, Administration
 from .mixins import AddressFormMixin, ContactFormMixin
 
 class AccountAdminForm(AddressFormMixin, forms.ModelForm):
@@ -21,5 +21,27 @@ class FamilyAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
     class Meta:
         model = Family
         exclude = ['address', 'contact']
+
+class AccommodationAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
+    class Meta:
+        model = Accommodation
+        exclude = ['address', 'contact']
+
+class BankAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
+    class Meta:
+        model = Bank
+        exclude = ['address', 'contact']
+
+class InsuranceAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
+    class Meta:
+        model = Insurance
+        exclude = ['address', 'contact']
+
+class AdministrationAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
+    class Meta:
+        model = Administration
+        exclude = ['address', 'contact']
+
+
 
 
