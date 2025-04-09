@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.admin.widgets import AdminDateWidget
 from .models import Account, Family
-from .mixins import AddressFormMixin
+from .mixins import AddressFormMixin, ContactFormMixin
 
 class AccountAdminForm(AddressFormMixin, forms.ModelForm):
     birthdate = forms.DateField(
@@ -17,7 +17,9 @@ class AccountAdminForm(AddressFormMixin, forms.ModelForm):
         )
         
 
-class FamilyAdminForm(AddressFormMixin, forms.ModelForm):
+class FamilyAdminForm(AddressFormMixin, ContactFormMixin, forms.ModelForm):
     class Meta:
         model = Family
-        exclude = ['address']
+        exclude = ['address', 'contact']
+
+

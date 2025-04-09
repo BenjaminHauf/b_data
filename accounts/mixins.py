@@ -1,5 +1,5 @@
 from django import forms
-from .models import Address, Family
+from .models import Address, Contact, Family
 
 class AddressFormMixin(forms.ModelForm):
     street = forms.CharField(max_length=40)
@@ -36,6 +36,38 @@ class AddressFormMixin(forms.ModelForm):
 
         obj = super().save(commit=False)
         obj.address = address
+        if commit:
+            obj.save()
+        return obj
+    
+class ContactFormMixin(forms.ModelForm):
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
+    contact_email = forms.CharField(max_length=30, required=False)
+    contact_phone = forms.IntegerField(required=False)
+
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if hasattr(self.instance, 'contact') and self.instance.contact:
+            self.fields['first_name'].initial = self.instance.contact.first_name
+            self.fields['last_name'].initial = self.instance.contact.last_name
+            self.fields['contact_email'].initial = self.instance.contact.contact_email
+            self.fields['contact_phone'].initial = self.instance.contact.contact_phone
+       
+
+    def save(self, commit=True):
+        contact_data = {
+            'first_name': self.cleaned_data['first_name'],
+            'last_name': self.cleaned_data['last_name'],
+            'contact_email': self.cleaned_data['contact_email'],
+            'contact_phone': self.cleaned_data['contact_phone'],
+
+        }
+        contact, _ = Contact.objects.get_or_create(**contact_data)
+
+        obj = super().save(commit=False)
+        obj.contact = contact
         if commit:
             obj.save()
         return obj

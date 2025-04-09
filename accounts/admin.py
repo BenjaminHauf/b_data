@@ -21,6 +21,18 @@ class AccountAdmin(admin.ModelAdmin):
 class FamilyAdmin(admin.ModelAdmin):
     form = FamilyAdminForm
 
+    fieldsets = (
+        ('Family Information', {
+            'fields': ('account', 'main_contact',)
+        }),
+        ('Contact Details', {
+            'fields': ('first_name', 'last_name', 'contact_email', 'contact_phone',),
+        }),
+        ('Address Details', {
+            'fields': ('street', 'house_number', 'addition', 'room', 'zip_code', 'city', 'state',),
+        }),
+    )
+
     
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Family, FamilyAdmin)
